@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: Service # Service object type sets up networking in a Kubernetes Cluster.
+metadata:
+  name: client-cluster-ip-service
+spec: # spec section configure the way that service behaves.
+  type: ClusterIP # ClusterIp provides access to our multi-client setup pods. Exposes a set of pods to other objects in the cluster. We use ClusterIp when we want to make a set of pods only accessible to other things inside of our Node.
+  selector: # We provide a selector as the service that we are creating knows what a set of Pod's it is supposed to be providing access to. This selectro will select client-deployment
+    component: web
+  ports: # ClusterIP is not accessible from the outside the world.
+    - port: 3000 # The port property is going to be how other pods or other objects inside of our cluster are going to access the pod that we are going of governing access to and the to.
+      targetPort: 3000 # targetPort is going to be the port on the target pod that we providing access to.

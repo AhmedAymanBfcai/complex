@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: server-deployment
+spec:
+  replicas: 3 # To indicate the number of different pods that we're going to set up. We say we need three pods running the multi-server image.
+  selector: # The deployment is going to use to find these set of pods that it's supposed to control.
+    matchLabels:
+      component: server
+  template:
+    metadata:
+      labels:
+        component: server
+    spec:
+      containers:
+        - name: server
+          image: ahmadayman/multi-server
+          ports:
+            - containerPort: 5000
