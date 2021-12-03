@@ -1,0 +1,16 @@
+apiVersion: v1
+# Prersistent Volumes claim is an advertisement of options (that you have access for storage inside of this particular cluster) while you can ask one of those optoins inside of your pod config nad when do you do Kubernetes will look at its existing stores of persistent volume and it's either going to give you a volume that's created ahead of time or it's going to attempt to create one on the fly.
+# It doesn't store data, Its's just an advertisement.
+kind: PersistentVolumeClaim
+metadata:
+  name: database-persistent-volume-claim
+spec:
+  accessModes:
+    - ReadWriteOnce
+  # - What types of access modes?
+  # * ReadWriteOnce => can be used by a single node.
+  # * ReadOnlyMany => Multiple nodes can read from this.
+  # * ReadWriteMany => can be read and written to by many nodes.
+  resources:
+    requests:
+      storage: 2Gi # That means that Kubernetes is going to have to find a storage option of 2GI
