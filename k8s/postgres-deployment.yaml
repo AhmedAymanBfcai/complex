@@ -7,13 +7,23 @@ spec:
   selector:
     matchLabels:
       component: postgres
-  template:
+  template: # This is a template that is used for every pod that is created by this deployment.
     metadata:
       labels:
         component: postgres
     spec:
+      volumes: # This to set up the request on the pod to reach out to Kubernetes to take some type of long term storage that meets all the requirenments that are that laid out in the database-persisten-volume-claim object.
+        - name: postgres-storage
+          persistenVolumeClaim:
+            claimName: database-persistent-volume-claim # That's line is going to make Kubernetes realize that it needs to go over to the local hard drive if you're in the case of your local environment or some cloud provider in the case of being deployed in production.
       containers:
         - name: postgres
           image: postgres
           ports:
             - containerPort: 5432
+          volumeMounts: # To tell how you wanna your storage after you access it to be used inside the container.
+            - name: postgres-storage
+              mountPath: /var/lib/postgressql/data # The mount path is designatinig where inside the container this strorage should be made available.
+              subPath: postgres # SubPath option means that any data inside the container that is stored inside of mountPath is going to be stored inside a folder called postgres insdie the actual PVC.
+
+Designating a PVC in a pod Template.
