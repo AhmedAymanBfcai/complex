@@ -1,4 +1,4 @@
-# This file to build our images, tag each one, push each to dockerhub
+# This file to build our images, tag each one, push each to dockerhub.
 docker build -t ahmadayman/multi-client:latest -t ahmadayman/multi-client:$SHA -f ./client/Dockerfile ./client
 docker build -t ahmadayman/multi-server:latest -t ahmadayman/multi-server:$SHA -f ./server/Dockerfile ./server
 docker build -t ahmadayman/multi-worker:latest -t ahmadayman/multi-worker:$SHA -f ./worker/Dockerfile ./worker
