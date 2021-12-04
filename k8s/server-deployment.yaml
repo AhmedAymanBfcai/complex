@@ -17,3 +17,21 @@ spec:
           image: ahmadayman/multi-server
           ports:
             - containerPort: 5000
+          env:
+            - name: REDIS_HOST
+              value: redis-cluster-ip-service
+            - name: REDIS_PORT
+              value: '6379' # Whenever you provide an environment variable you have to provide it as a string.
+            - name: PGUSER
+              value: postgres
+            - name: PGHOST
+              value: postgres-cluster-ip-service
+            - name: PGPORT
+              value: '5432'
+            - name: PGDATABASE
+              value: postgres # Default ( It;s is not the best one but for our purposes it,s nice.)
+            - name: PGPASSWORD # It's not related to the sercet but it's just variable name.
+              valueFrom:
+                secretKeyRef:
+                  name: pgpassword
+                  key: PGPASSWORD

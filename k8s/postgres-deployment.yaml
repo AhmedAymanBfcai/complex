@@ -25,5 +25,9 @@ spec:
             - name: postgres-storage
               mountPath: /var/lib/postgressql/data # The mount path is designatinig where inside the container this strorage should be made available.
               subPath: postgres # SubPath option means that any data inside the container that is stored inside of mountPath is going to be stored inside a folder called postgres insdie the actual PVC.
-
-Designating a PVC in a pod Template.
+          env:
+            - name: PGPASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: pgpassword
+                  key: PGPASSWORD
