@@ -1,0 +1,23 @@
+# Ingress config is an Object that has a set of configuration rules describing how traffic should be routed.
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: ingress-service
+  annotations:
+    kubernetes.io/ingress.class: nginx # To tell Kubernetes that we want to create an Ingress-Controller based on the nginx project. And Ingress-Controller Watches for changes to the ingress and updates the "thing" that handles the traffic.
+    nginx.ingress.kubernetes.io/rewrite-target: /$1 # To configure how our compy of nginx behaves while hanlding traffic.
+    # UPDATE THIS LINE ABOVE
+spec:
+  rules:
+    - http:
+        paths: # To indicate which path you wanna match traffic to.
+          - path: /?(.*) # Will be routed to client service.
+            # UPDATE THIS LINE ABOVE
+            backend:
+              serviceName: client-cluster-ip-service
+              servicePort: 3000
+          - path: /api/?(.*)
+            # UPDATE THIS LINE ABOVE
+            backend: # Will be Server service.
+              serviceName: server-cluster-ip-service
+              servicePort: 5000
