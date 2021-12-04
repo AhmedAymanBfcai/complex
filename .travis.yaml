@@ -1,0 +1,27 @@
+sudo: requried
+services:
+  - docker
+env:
+  global:
+    - SHA=$(git rev-parse HEAD) # That's will going to determine the current commit SHA and assign it to a environment variable insdie of our Travis env alone called SHA. And you can acces this variable inside deploy.sh file.
+    - CLOUDSDK_CORE_DISABLE_PROMPTS=1 # That's will make sure the Google cloud CLI does not try to show us any prompts.
+before_install: # To set up Google Cloud locally.
+  - openssl aes-256-cbc -K $encrypted_0c35eebf40c_key -iv $encrypted_0c35eebf403c_iv -in service-account.json.enc -out service-account.json -d
+  - curl https://sdk.cloud.google.com | bash > /dev/null; # The first part of the this line will download Google CLoud SDK and the second will install it locally on our little instance that is assigned to us by Travis-CI
+  - source $HOME/google-cloud-sdk/path.bash.inc # This line is going to look at default install directory of Google Cloud SDK and it's going to source the file path bash.inc
+  - gcloud components update kubectl # That's going to install and update kubectl inside our travis environment and going to use the kubectl to apply those different configuration files and some of commnds you wanna run.
+  - gcloud auth activate-service-account --key-file service-account.json # To tell Google Cloud SDK who you are and give it acces to our account, We need to provide an active service account and then provide a set of credentials inside of a file that we are calling service-account.json
+  - gcloud config set project  skilful-berm21453
+  - gcloud config set compute/zone us-central1-a
+  - gcloud container clusters get-credentails multi-cluster # This is going to tell GC to reach out our multi-cluster.
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+  - docker build -t ahmadayman/react-test -f ./client/Dockerfile.dev ./client
+
+script:
+  - docker run ahmadayman/react-test npm test -- --coverage # coverage is going ot give travis a signal that either everything run successfully or it crased.
+
+deploy:
+  provider: script # To order Travis to jut run this scipt below.
+  script: bash ./deploy.sh # That means that we provide a custom script file called deploy.sh
+  on: # An option
+    branch: master
