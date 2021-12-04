@@ -22,6 +22,6 @@ script:
 
 deploy:
   provider: script # To order Travis to jut run this scipt below.
-  script: bash ./deploy.sh # That means that we provide a custom script file called deploy.sh
+  script: bash ./deploy.sh # That's mean that we provide a custom script file called deploy.sh
   on: # An option
     branch: master
